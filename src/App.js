@@ -1,46 +1,67 @@
-import React from 'react';
-// import Countdown from 'react-countdown-now';
-// import Sidebar from "react-sidebar";
-// import MenuBar from './images/icons8-menu-30.png';
-import Home from './Home';
-import './App.css';
+import React, { Component } from 'react';
+import CalcTime from './helper/calc';
 
+export default class Timer extends Component {
+    state = {
+        days: 0,
+        hours: 0,
+        minutes: 3,
+        seconds: 0,
+    }
 
+    componentDidMount() {
+      CalcTime();
+      this.x = setInterval(function() {
+    
+        this.theDates = CalcTime('London', '+0.0');
+      console.log('theeDates ==>', this.theDates);
+        var countDownDate = new Date(this.theDates).getTime();
+        var now = new Date().getTime();
+        
+        var distance = countDownDate - now;
+        console.log('this is distance ==>', distance);
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        // document.getElementById("countDown").innerHTML = days + "d " + hours + "h " + minutes + "m "+ seconds + "s";;
+    
+        }, 1000);
+        this.myInterval = setInterval(() => {
+            const { days, hours, seconds, minutes } = this.state
 
-export default () => {
-  return <Home name="Alligator" />;
-};
-// class App extends React.Component {
-//   constructor(props){
-//     super(props);
-//     this.state = {
-//       sidebarOpen: true
-//     }
-//     this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
-//   }
-//   onSetSidebarOpen(open) {
-//     this.setState({ sidebarOpen: open });
-//   }
-//   render(props){
-//     const sideBarButton = this.state.sidebarOpen ? 'opened' : 'closed';
-//   return (
-//     <div>
+            if (seconds > 0) {
+                this.setState(({ seconds }) => ({
+                    seconds: seconds - 1
+                }))
+            }
+            if (seconds === 0) {
+                if (minutes === 0) {
+                    clearInterval(this.myInterval)
+                } else {
+                    this.setState(({ minutes }) => ({
+                        minutes: minutes - 1,
+                        seconds: 59
+                    }))
+                }
+            } 
+        }, 1000)
+    }
 
-//     <Sidebar
-//     sidebar={<div className='side-bar'></div>}
-//     open={this.state.sidebarOpen}
-//     onSetOpen={this.onSetSidebarOpen}
-//     styles={{ sidebar: { background: "white" } }}
-//     >
-//     <button className={sideBarButton} onClick={() => this.onSetSidebarOpen(true)}>
-//         <img className='menu-bar' src={MenuBar} alt='menu-icon' />
-//     </button>
-//   </Sidebar>
-//     <div className="App">
-//       <Countdown date={Date.now() + 50001} />
-//     </div>
-//     </div>
-// );
-// }
-// }
-// export default App;
+    componentWillUnmount() {
+        clearInterval(this.myInterval)
+    }
+
+    render() {
+        const { minutes, seconds } = this.state
+        return (
+            <div>
+                { minutes === 0 && seconds === 0
+                    ? <h1>Busted!</h1>
+                    : <h1>Time Remaining: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</h1>
+                }
+            </div>
+        )
+    }
+}
