@@ -17,7 +17,7 @@ componentDidMount = () => {
       <div className="App">
       <header className="App-header">
       <p id="countDown"></p>
-      
+      <p>Coming soon</p>
       </header>
       </div>
       )
