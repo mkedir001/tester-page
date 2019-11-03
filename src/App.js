@@ -16,8 +16,8 @@ componentDidMount = () => {
     return (
       <div className="App">
       <header className="App-header">
-      <p id="countDown"></p>
       <p>Coming soon</p>
+      <p id="countDown"></p>
       </header>
       </div>
       )
